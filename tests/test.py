@@ -1,10 +1,14 @@
 #test.py
 #17/08/2022
 
+import sys
+
+sys.path.append( '../lib' )
+
 from importData import importData
 
 class Test(object):
-    fileName = 'stocksData.json'
+    fileName = '../data/stocksData.json'
     def __init__(self):
         self.data = None
     def run(self):
