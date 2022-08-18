@@ -82,12 +82,3 @@ class StockAlerter(object):
                 print(data['epsValueTenYears'])
                 print(data['marketPriceTenYears'])
                 print(data['annualRateOfGrouthTenYears'])
-            
-        # for i in self.data['members']:
-            # print("Name:", i['name'])
-            # print("Tikr:", i['tikr'])
-            # print("Currency:", i['currency'])
-            # print("PE:", i['minPE10Years'])
-            # print("Years:", i['years'])
-            # print("EPS:", i['eps'])
-            # print()

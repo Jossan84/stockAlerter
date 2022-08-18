@@ -3,3 +3,5 @@ https://www.alpharithms.com/python-financial-data-491110/
 
 https://towardsdatascience.com/the-easiest-way-to-run-python-in-google-cloud-illustrated-d307c9e1651c
 https://towardsdatascience.com/automate-whatsapp-messages-with-python-in-3-steps-d64cf0de4539
+
+https://realpython.com/python-send-email/
