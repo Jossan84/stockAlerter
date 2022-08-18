@@ -21,6 +21,7 @@ class Test(object):
         self.testGetEpsValueTenYears()
         self.testGetMarketPriceTenYears()
         self.testGetAnnualRateOfGrouthTenYears()
+        self.testGetStockEstimationsTenYears()
         
     def testImportData(self):
         try:
@@ -78,3 +79,11 @@ class Test(object):
         stockAlerter = StockAlerter()
         result = stockAlerter.getAnnualRateOfGrouthTenYears(marketPriceTenYears, currentPrice)
         assert result == 0.3114371389976238, "Wrong implementation for get annual rate of grouth to 10 years"
+        
+    def testGetStockEstimationsTenYears(self):
+        try:
+            stockAlerter = StockAlerter()
+            result = stockAlerter.getStockEstimationsTenYears()
+        except NameError:
+            raise NameError
+        
