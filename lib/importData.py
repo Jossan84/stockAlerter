@@ -27,18 +27,17 @@ def getLastPrice(tikr):
 def getAnnualRateOfGrouth(eps):
     lastEarnings = eps[0]
     firstEarnings = eps[10]
-    numYears = 10.0
-    return pow(lastEarnings/firstEarnings, 1.0/numYears)-1
+    return pow(lastEarnings/firstEarnings, 1.0/numYears())-1
     
 def getEpsValueTenYears(eps, annualRateOfGrouth):
     lastEarnings = eps[0]
-    numYears = 10
-    return lastEarnings * pow(1 + annualRateOfGrouth, numYears)
+    return lastEarnings * pow(1 + annualRateOfGrouth, numYears())
     
 def getMarketPriceTenYears(epsValueTenYears, pe):
     return epsValueTenYears * pe
     
 def getAnnualRateOfGrouthTenYears(marketPriceTenYears, currentPrice):
-    numYears = 10
-    return pow(marketPriceTenYears/currentPrice, 1.0/numYears)-1
+    return pow(marketPriceTenYears/currentPrice, 1.0/numYears())-1
     
+def numYears():
+    return 10
