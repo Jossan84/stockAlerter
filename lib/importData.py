@@ -37,3 +37,8 @@ def getEpsValueTenYears(eps, annualRateOfGrouth):
     
 def getMarketPriceTenYears(epsValueTenYears, pe):
     return epsValueTenYears * pe
+    
+def getAnnualRateOfGrouthTenYears(marketPriceTenYears, currentPrice):
+    numYears = 10
+    return pow(marketPriceTenYears/currentPrice, 1.0/numYears)-1
+    

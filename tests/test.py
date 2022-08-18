@@ -10,6 +10,7 @@ from importData import getLastPrice
 from importData import getAnnualRateOfGrouth
 from importData import getEpsValueTenYears
 from importData import getMarketPriceTenYears
+from importData import getAnnualRateOfGrouthTenYears
 
 class Test(object):
     fileName = '../data/stocksData.json'
@@ -22,7 +23,9 @@ class Test(object):
         self.testGetLastPrice()
         self.testGetAnnualRateOfGrouth()
         self.testGetEpsValueTenYears()
-    
+        self.testGetMarketPriceTenYears()
+        self.testGetAnnualRateOfGrouthTenYears()
+        
     def testImportData(self):
         try:
             self.data = importData(self.fileName)
@@ -59,7 +62,13 @@ class Test(object):
         assert result == 345.8450000000001, "Wrong implementation for get eps value to 10 years"
 
     def testGetMarketPriceTenYears(self):
-        epsValueTenYears == 345.8450000000001
+        epsValueTenYears = 345.8450000000001
         pe = 10
         result = getMarketPriceTenYears(epsValueTenYears, pe)
-        assert result == 34584.50000000001, "Wrong implementation for get market price to 10 years"
+        assert result == 3458.4500000000007, "Wrong implementation for get market price to 10 years"
+        
+    def testGetAnnualRateOfGrouthTenYears(self):
+        marketPriceTenYears = 3458.4500000000007
+        currentPrice = 229.83
+        result = getAnnualRateOfGrouthTenYears(marketPriceTenYears, currentPrice)
+        assert result == 0.3114371389976238, "Wrong implementation for get annual rate of grouth to 10 years"
