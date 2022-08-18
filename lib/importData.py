@@ -23,3 +23,17 @@ def printData(data):
 def getLastPrice(tikr):
     data = yf.Ticker(tikr).history(period='1d')
     return data['Close']
+    
+def getAnnualRateOfGrouth(eps):
+    lastEarnings = eps[0]
+    firstEarnings = eps[10]
+    numYears = 10.0
+    return pow(lastEarnings/firstEarnings, 1.0/numYears)-1
+    
+def getEpsValueTenYears(eps, annualRateOfGrouth):
+    lastEarnings = eps[0]
+    numYears = 10
+    return lastEarnings * pow(1 + annualRateOfGrouth, numYears)
+    
+def getMarketPriceTenYears(epsValueTenYears, pe):
+    return epsValueTenYears * pe

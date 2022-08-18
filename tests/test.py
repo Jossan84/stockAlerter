@@ -7,6 +7,9 @@ sys.path.append( '../lib' )
 
 from importData import importData
 from importData import getLastPrice
+from importData import getAnnualRateOfGrouth
+from importData import getEpsValueTenYears
+from importData import getMarketPriceTenYears
 
 class Test(object):
     fileName = '../data/stocksData.json'
@@ -17,6 +20,8 @@ class Test(object):
         self.testDataIsEmpty()
         self.testDataStructure()
         self.testGetLastPrice()
+        self.testGetAnnualRateOfGrouth()
+        self.testGetEpsValueTenYears()
     
     def testImportData(self):
         try:
@@ -41,3 +46,20 @@ class Test(object):
             data = getLastPrice("CPRT")
         except NameError:
             raise NameError
+         
+    def testGetAnnualRateOfGrouth(self):
+        eps = [ 2.63, 2.36, 1.90, 1.47, 0.98, 0.53, 0.38, 0.28, 0.15, 0.11, 0.02, 0.02 ]
+        result = getAnnualRateOfGrouth(eps)
+        assert result == 0.628893068687475, "Wrong implementation for get annual rate of grouth"
+        
+    def testGetEpsValueTenYears(self):
+        eps = [ 2.63, 2.36, 1.90, 1.47, 0.98, 0.53, 0.38, 0.28, 0.15, 0.11, 0.02, 0.02 ]
+        annualRateOfGrouth = 0.628893068687475
+        result = getEpsValueTenYears(eps, annualRateOfGrouth)
+        assert result == 345.8450000000001, "Wrong implementation for get eps value to 10 years"
+
+    def testGetMarketPriceTenYears(self):
+        epsValueTenYears == 345.8450000000001
+        pe = 10
+        result = getMarketPriceTenYears(epsValueTenYears, pe)
+        assert result == 34584.50000000001, "Wrong implementation for get market price to 10 years"
