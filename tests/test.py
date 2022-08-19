@@ -25,7 +25,7 @@ class Test(object):
         
     def testImportData(self):
         try:
-            stockAlerter = StockAlerter()
+            stockAlerter = StockAlerter(self.fileName)
             self.data = stockAlerter.importData(self.fileName)
         except NameError:
             raise NameError
@@ -44,7 +44,7 @@ class Test(object):
     
     def testGetLastPrice(self):
         try:
-            stockAlerter = StockAlerter()
+            stockAlerter = StockAlerter(self.fileName)
             data = stockAlerter.getLastPrice("CPRT")
         except NameError:
             raise NameError
@@ -52,7 +52,7 @@ class Test(object):
     def testGetAnnualRateOfGrouth(self):
         eps = [ 2.63, 2.36, 1.90, 1.47, 0.98, 0.53, 0.38, 0.28, 0.15, 0.11, 0.02, 0.02 ]
         
-        stockAlerter = StockAlerter()
+        stockAlerter = StockAlerter(self.fileName)
         result = stockAlerter.getAnnualRateOfGrouth(eps)
         assert result == 0.628893068687475, "Wrong implementation for get annual rate of grouth"
         
@@ -60,7 +60,7 @@ class Test(object):
         eps = [ 2.63, 2.36, 1.90, 1.47, 0.98, 0.53, 0.38, 0.28, 0.15, 0.11, 0.02, 0.02 ]
         annualRateOfGrouth = 0.628893068687475
         
-        stockAlerter = StockAlerter()
+        stockAlerter = StockAlerter(self.fileName)
         result = stockAlerter.getEpsValueTenYears(eps, annualRateOfGrouth)
         assert result == 345.8450000000001, "Wrong implementation for get eps value to 10 years"
 
@@ -68,7 +68,7 @@ class Test(object):
         epsValueTenYears = 345.8450000000001
         pe = 10
         
-        stockAlerter = StockAlerter()
+        stockAlerter = StockAlerter(self.fileName)
         result = stockAlerter.getMarketPriceTenYears(epsValueTenYears, pe)
         assert result == 3458.4500000000007, "Wrong implementation for get market price to 10 years"
         
@@ -76,13 +76,13 @@ class Test(object):
         marketPriceTenYears = 3458.4500000000007
         currentPrice = 229.83
         
-        stockAlerter = StockAlerter()
+        stockAlerter = StockAlerter(self.fileName)
         result = stockAlerter.getAnnualRateOfGrouthTenYears(marketPriceTenYears, currentPrice)
         assert result == 0.3114371389976238, "Wrong implementation for get annual rate of grouth to 10 years"
         
     def testGetStockEstimationsTenYears(self):
         try:
-            stockAlerter = StockAlerter()
+            stockAlerter = StockAlerter(self.fileName)
             result = stockAlerter.getStockEstimationsTenYears()
         except NameError:
             raise NameError

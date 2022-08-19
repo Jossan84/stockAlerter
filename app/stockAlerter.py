@@ -6,9 +6,10 @@ import yfinance as yf
 import pandas as pd
 
 class StockAlerter(object):
-    def __init__(self):
+    def __init__(self, fileName):
         self.data = None
         self.numYears = 10
+        self.fileName = fileName
 
     def importData(self, fileName):
         with open(fileName) as json_file:
@@ -46,7 +47,7 @@ class StockAlerter(object):
         return pow(marketPriceTenYears/currentPrice, 1.0/self.numYears)-1
 
     def getStocksDataMembers(self):
-        self.data = self.importData('../data/stocksData.json')        
+        self.data = self.importData(self.fileName)        
         return self.data['members']
 
     def getStocksDataMember(self, members):        
@@ -74,11 +75,14 @@ class StockAlerter(object):
     
     def printEstimations(self, result):
             for data in result:
-                print("Name:", data['name'])
-                print("Tikr:",data['tikr'])
-                print(data['currency'])
-                print(data['currentPrice'])
-                print(data['annualRateOfGrouth'])
-                print(data['epsValueTenYears'])
-                print(data['marketPriceTenYears'])
-                print(data['annualRateOfGrouthTenYears'])
+                if data['currency'] == "dolar":
+                    currencySymbol = "$"
+                else:
+                    currencySymbol = "€"
+            
+                print("-----------------------------------------------------------")
+                print(data['name'] + " (" + data['tikr'] + "):")
+                print("     Earnings per share have a annual rate of grouth of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%, ")
+                print("     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of ")
+                print("     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol )
+                print("     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.")            
