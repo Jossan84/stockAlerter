@@ -4,6 +4,7 @@
 import json
 import yfinance as yf
 import pandas as pd
+from datetime import datetime
 
 class StockAlerter(object):
     def __init__(self, fileName):
@@ -69,8 +70,7 @@ class StockAlerter(object):
             data['annualRateOfGrouthTenYears'] = self.getAnnualRateOfGrouthTenYears(data['marketPriceTenYears'], data['currentPrice'])
 
             result[count] = data.copy()
-            count = count + 1 
-        self.printEstimations(result)
+            count = count + 1
         return result
     
     def printEstimations(self, result):
@@ -85,4 +85,32 @@ class StockAlerter(object):
                 print("     Earnings per share have a annual rate of grouth of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%, ")
                 print("     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of ")
                 print("     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol )
-                print("     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.")            
+                print("     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.")
+
+
+    def buildReport(self):
+        result = self.getStockEstimationsTenYears()
+        now = datetime.now()
+        report = ("REPORT\n"
+                 +"Stock list file: " + self.fileName + "\n"
+                 +"Description: Estimations for the track list of companies.\n"
+                 +"Date: " + now.strftime("%d/%m/%Y %H:%M:%S")
+                 +"\n-------------------------------------------------------------------------------------------------------\n")
+        for data in result:
+            if data['currency'] == "dolar":
+                currencySymbol = "$"
+            else:
+                currencySymbol = "€"
+            if data['annualRateOfGrouthTenYears'] >= 0.06:
+                report += (data['name'] + " (" + data['tikr'] + "):\n"
+                +"     Earnings per share have a annual rate of grouth of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%, \n"
+                +"     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
+                +"     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
+                +"     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.\n"
+                +"-----------------------------------------------------------\n")
+        print(report)
+        return report
+        
+    # def sendAlert(self):
+        # report = self.buildReport
+        # self.sendReport(report)               

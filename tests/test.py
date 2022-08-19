@@ -84,6 +84,7 @@ class Test(object):
         try:
             stockAlerter = StockAlerter(self.fileName)
             result = stockAlerter.getStockEstimationsTenYears()
+            stockAlerter.buildReport()
         except NameError:
             raise NameError
         
