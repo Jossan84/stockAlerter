@@ -1,10 +1,14 @@
 #stockAlerter.py
 #17/08/2022
 
+import os
 import json
-import yfinance as yf
+import smtplib
 import pandas as pd
+import yfinance as yf
 from datetime import datetime
+from email.message import EmailMessage
+
 
 class StockAlerter(object):
     def __init__(self, fileName):
@@ -87,7 +91,6 @@ class StockAlerter(object):
                 print("     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol )
                 print("     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.")
 
-
     def buildReport(self):
         result = self.getStockEstimationsTenYears()
         now = datetime.now()
@@ -110,7 +113,50 @@ class StockAlerter(object):
                 +"-----------------------------------------------------------\n")
         print(report)
         return report
+
+    def buildReportHTML(self):
+        result = self.getStockEstimationsTenYears()
+        now = datetime.now()
+        report = ("<!DOCTYPE html>\n"
+                 +"<html>\n"
+                 +"      <body>\n"
+                 +"         <h1 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Stock list report</h1>\n"
+                 +"         <h3 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Stock list file: " + self.fileName + "</h3>\n"
+                 +"         <h3 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Description: Estimations for the track list of companies.</h3>\n"
+                 +"         <h3 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Date: " + now.strftime("%d/%m/%Y %H:%M:%S") + "</h3>\n")
         
-    # def sendAlert(self):
-        # report = self.buildReport
-        # self.sendReport(report)               
+        for data in result:
+            if data['currency'] == "dolar":
+                currencySymbol = "$"
+            else:
+                currencySymbol = "€"
+            if data['annualRateOfGrouthTenYears'] >= 0.06:
+                report += ("         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
+                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: green'"'>annual rate of grouth (eps) of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%</span>, \n"
+                +"with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
+                +"last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
+                +"whe  <span style='"'color: blue'"'>could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.</span></h3>\n")
+        report += ("      </body>\n"
+                +"</html>")        
+        # file = open("sample.html","w")
+        # file.write(report)
+        # file.close()
+        return report         
+
+    def sendEmail(self, contact, subject, htmlMessage):
+        EMAIL_ADDRESS = os.environ.get('EMAIL_USER')
+        EMAIL_PASSWORD = os.environ.get('EMAIL_PASS')
+
+        msg = EmailMessage()
+        msg['Subject'] = subject
+        msg['From'] = EMAIL_ADDRESS
+        msg['To'] = contact
+
+        msg.add_alternative(htmlMessage, subtype='html')
+
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            smtp.send_message(msg)
+        
+    def sendAlert(self, report):
+        self.sendEmail('sanchezmosquerajosemanuel@gmail.com', 'Stock list report', report)               
