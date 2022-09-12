@@ -2,17 +2,25 @@
 #11/09/2022
 
 import matplotlib.pyplot as plt
-# from getEarningsPerShare import getEarningsPerShare
+from getEarningsPerShare import getEarningsPerShare
 
-tikr = 'AAPL'
-# years, eps = getEarningsPerShare(tikr)
+stockList = ['AAPL', 'MSFT', 'GOOG', 'META', 'NVDA', 'TMO', 'DHR', 'AMT', 'GS', 'AMAT',
+             'REGN', 'CCI', 'BX', 'LRCX', 'SNPS', 'KLAC', 'ORLY', 'LULU', 'FTNT', 'MSCI',
+             'STM', 'IDXX', 'ODFL', 'TROW', 'VEEV', 'CPRT', 'DHI', 'SIVB', 'RJF', 'HCCI', 
+             'LEN', 'URI', 'MPWR', 'CTLT', 'STLD', 'ENTG', 'GNRC', 'TRU', 'SSNC', 'POOL',
+             'TER', 'TECH', 'DPZ', 'RGEN', 'CE', 'RS', 'FNF', 'SBNY', 'CRL', 'CUBE', 'PHM', 
+             'BLDR', 'DKS', 'WAL', 'NXST', 'CACC', 'SF', 'QLYS', 'DSGX', 'SFST', 'HBCP', 'UNTY',
+             'TREX', 'SAIA', 'TOL', 'TRNO', 'ESNT', 'WNS', 'FOXF', 'SSD', 'EVR', 'NVR', 'PKBK', 
+             'SKY', 'OTTR', 'MTH', 'CORT', 'APAM', 'MDC', 'BOOT', 'CVCO', 'MHO', 'MCRI', 'NSSC',
+             'MBUU', 'KRNY', 'CCBG', 'SMBC', 'GCBC', 'PLBC', 'FCCO', 'PBHC', 'UBCP', 'UBOH']
 
-years =  [ 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011 ]
-eps = [ 2.63, 2.36, 1.90, 1.47, 0.98, 0.53, 0.38, 0.28, 0.15, 0.11, 0.02, 0.02 ]
 
-plt.title('Earnings per Share ' + tikr)
-plt.plot(years, eps, 'b.-')
-plt.xlabel('Years')
-plt.ylabel('EPS [$]')
-plt.grid(True)
-plt.show()
+for tikr in stockList:
+    years, eps = getEarningsPerShare(tikr)
+
+    plt.title('Earnings per Share ' + tikr)
+    plt.plot(years, eps, 'b.-')
+    plt.xlabel('Years')
+    plt.ylabel('EPS [$]')
+    plt.grid(True)
+    plt.show()
