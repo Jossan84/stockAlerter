@@ -27,8 +27,15 @@ def getEarningsPerShare(tikr):
         year = []
                 
     for link in range(0, 24, 2):
-        eps.append(float(re.search('>\$(.+?)<',str(links[link+1])).group(1)))
-        year.append(int(re.search('>(.+?)<',str(links[link])).group(1)))
+        year_ = int(re.search('>(.+?)<',str(links[link])).group(1))
+        eps_ = float(re.search('>\$(.+?)<',str(links[link+1])).group(1))
+        if year_ in year:
+            index = year.index(year_)
+            year[index] = year_
+            eps[index] = eps_
+        else:
+            eps.append(eps_)
+            year.append(year_)
     return year, eps
     
 def getMinPriceEarnigsRatio(tikr):
