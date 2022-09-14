@@ -86,10 +86,10 @@ class StockAlerter(object):
             
                 print("-----------------------------------------------------------")
                 print(data['name'] + " (" + data['tikr'] + "):")
-                print("     Earnings per share have a annual rate of grouth of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%, ")
+                print("     Earnings per share have a annual rate of growth of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%, ")
                 print("     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of ")
                 print("     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol )
-                print("     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.")
+                print("     whe could get a annual rate of growth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.")
 
     def buildReport(self):
         result = self.getStockEstimationsTenYears()
@@ -112,10 +112,10 @@ class StockAlerter(object):
                 # +"     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.\n"
                 # +"-----------------------------------------------------------\n")
             report += (data['name'] + " (" + data['tikr'] + "):\n"
-            +"     Earnings per share have a annual rate of grouth of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%, \n"
+            +"     Earnings per share have a annual rate of growth of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%, \n"
             +"     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
             +"     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
-            +"     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.\n"
+            +"     whe could get a annual rate of growth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.\n"
             +"-----------------------------------------------------------\n")    
         print(report)
         return report
@@ -138,15 +138,15 @@ class StockAlerter(object):
                 currencySymbol = "€"
             # if data['annualRateOfGrouthTenYears'] >= 0.06:
                 # report += ("         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
-                # +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: green'"'>annual rate of grouth (eps) of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%</span>, \n"
+                # +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: green'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%</span>, \n"
                 # +"with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
                 # +"last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
-                # +"whe  <span style='"'color: blue'"'>could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.</span></h3>\n")
+                # +"whe  <span style='"'color: blue'"'>could get a annual rate of growth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.</span></h3>\n")
             report += ("         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
-                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: green'"'>annual rate of grouth (eps) of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%</span>, \n"
+                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: green'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrouth'], 4)*100) + "%</span>, \n"
                 +"with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
                 +"last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
-                +"whe  <span style='"'color: blue'"'>could get a annual rate of grouth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.</span></h3>\n")    
+                +"whe  <span style='"'color: blue'"'>could get a annual rate of growth of " + str(round(data['annualRateOfGrouthTenYears']*100, 2)) + "%.</span></h3>\n")    
         report += ("      </body>\n"
                 +"</html>")        
         # file = open("sample.html","w")
