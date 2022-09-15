@@ -17,10 +17,10 @@ class Test(object):
         self.testDataIsEmpty()
         self.testDataStructure()
         self.testGetLastPrice()
-        self.testGetAnnualRateOfGrouth()
+        self.testGetAnnualRateOfGrowth()
         self.testGetEpsValueTenYears()
         self.testGetMarketPriceTenYears()
-        self.testGetAnnualRateOfGrouthTenYears()
+        self.testGetAnnualRateOfGrowthTenYears()
         self.testGetStockEstimationsTenYears()
         
     def testImportData(self):
@@ -49,19 +49,19 @@ class Test(object):
         except NameError:
             raise NameError
          
-    def testGetAnnualRateOfGrouth(self):
+    def testGetAnnualRateOfGrowth(self):
         eps = [ 2.63, 2.36, 1.90, 1.47, 0.98, 0.53, 0.38, 0.28, 0.15, 0.11, 0.02, 0.02 ]
         
         stockAlerter = StockAlerter(self.fileName)
-        result = stockAlerter.getAnnualRateOfGrouth(eps)
+        result = stockAlerter.getAnnualRateOfGrowth(eps)
         assert result == 0.628893068687475, "Wrong implementation for get annual rate of grouth"
         
     def testGetEpsValueTenYears(self):
         eps = [ 2.63, 2.36, 1.90, 1.47, 0.98, 0.53, 0.38, 0.28, 0.15, 0.11, 0.02, 0.02 ]
-        annualRateOfGrouth = 0.628893068687475
+        annualRateOfGrowth = 0.628893068687475
         
         stockAlerter = StockAlerter(self.fileName)
-        result = stockAlerter.getEpsValueTenYears(eps, annualRateOfGrouth)
+        result = stockAlerter.getEpsValueTenYears(eps, annualRateOfGrowth)
         assert result == 345.8450000000001, "Wrong implementation for get eps value to 10 years"
 
     def testGetMarketPriceTenYears(self):
@@ -72,12 +72,12 @@ class Test(object):
         result = stockAlerter.getMarketPriceTenYears(epsValueTenYears, pe)
         assert result == 3458.4500000000007, "Wrong implementation for get market price to 10 years"
         
-    def testGetAnnualRateOfGrouthTenYears(self):
+    def testGetAnnualRateOfGrowthTenYears(self):
         marketPriceTenYears = 3458.4500000000007
         currentPrice = 229.83
         
         stockAlerter = StockAlerter(self.fileName)
-        result = stockAlerter.getAnnualRateOfGrouthTenYears(marketPriceTenYears, currentPrice)
+        result = stockAlerter.getAnnualRateOfGrowthTenYears(marketPriceTenYears, currentPrice)
         assert result == 0.3114371389976238, "Wrong implementation for get annual rate of grouth to 10 years"
         
     def testGetStockEstimationsTenYears(self):
