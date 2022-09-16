@@ -1,10 +1,14 @@
 #main.py
 #24/08/2022
 
+import os
 from stockAlerter import StockAlerter
 
 def main():
-    stockAlerter = StockAlerter('../data/stocksData.json')
+    rootDir = os.path.dirname(os.path.realpath(__file__)).replace('\\app','').replace('/app','')
+    dataFilePath = (rootDir + "\data\stocksData.json").replace('\\', '/')
+
+    stockAlerter = StockAlerter(dataFilePath)
     result = stockAlerter.getStockEstimationsTenYears()
     report = stockAlerter.buildReportHTML()
     stockAlerter.sendAlert(report)
