@@ -9,7 +9,7 @@ from getEarningsPerShare import getEarningsPerShare
 stockList = ['AAPL', 'MSFT', 'GOOG', 'META', 'NVDA', 'TMO', 'DHR', 'AMT', 'GS', 'AMAT',
              'REGN', 'LRCX', 'SNPS', 'KLAC', 'ORLY', 'LULU', 'FTNT', 'MSCI',
              'STM', 'IDXX', 'ODFL', 'TROW', 'VEEV', 'CPRT', 'DHI', 'SIVB', 'RJF',
-             'LEN', 'URI', 'MPWR', 'ENTG', 'GNRC', 'TRU', 'POOL',
+             'LEN', 'URI', 'MPWR', 'ENTG', 'GNRC', 'TRU', 'POOL', 'COST',
              'DPZ', 'RGEN', 'CE', 'RS', 'FNF', 'SBNY', 'CRL', 'CUBE', 'PHM', 
              'BLDR', 'DKS', 'WAL', 'NXST', 'CACC', 'SF', 'QLYS', 'DSGX', 'SFST', 'HBCP', 'UNTY',
              'TREX', 'SAIA', 'TOL', 'TRNO', 'ESNT', 'WNS', 'FOXF', 'SSD', 'EVR', 'NVR', 'PKBK', 

@@ -48,7 +48,7 @@ def getMinPriceEarnigsRatio(tikr):
     lines = str(links).split('\n')
     
     min = float('inf')
-    for i in range(11, 250, 5):
+    for i in range(11, 150, 5):
         val = float(re.search('">(.+?)<',str(lines[i])).group(1))
         if val < min:
             min = val
