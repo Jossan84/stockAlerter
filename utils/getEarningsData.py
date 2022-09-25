@@ -30,7 +30,7 @@ for k in range(len(stockList)):
     member["name"] = data_.info["shortName"]
     member["tikr"] = stockList[k]
     member["currency"] = data_.info["currency"]
-    member["minPE10Years"] = minPE10Years
+    member["minPE10Years"] = max(minPE10Years, 15)
     member["years"] = years
     member["eps"] = eps
     members.append(member.copy())
