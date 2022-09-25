@@ -79,7 +79,7 @@ class StockAlerter(object):
     
     def printEstimations(self, result):
             for data in result:
-                if data['currency'] == "dolar":
+                if data['currency'] == "USD":
                     currencySymbol = "$"
                 else:
                     currencySymbol = "€"
@@ -100,7 +100,7 @@ class StockAlerter(object):
                  +"Date: " + now.strftime("%d/%m/%Y %H:%M:%S")
                  +"\n-------------------------------------------------------------------------------------------------------\n")
         for data in result:
-            if data['currency'] == "dolar":
+            if data['currency'] == "USD":
                 currencySymbol = "$"
             else:
                 currencySymbol = "€"
@@ -132,7 +132,7 @@ class StockAlerter(object):
                  +"         <h3 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Date: " + now.strftime("%d/%m/%Y %H:%M:%S") + "</h3>\n")
         
         for data in result:
-            if data['currency'] == "dolar":
+            if data['currency'] == "USD":
                 currencySymbol = "$"
             else:
                 currencySymbol = "€"
