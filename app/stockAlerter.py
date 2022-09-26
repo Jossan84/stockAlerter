@@ -6,8 +6,10 @@ import json
 import smtplib
 import pandas as pd
 import yfinance as yf
+import urllib.request
 from datetime import datetime
 from email.message import EmailMessage
+from email.utils import make_msgid
 
 
 class StockAlerter(object):
@@ -104,13 +106,6 @@ class StockAlerter(object):
                 currencySymbol = "$"
             else:
                 currencySymbol = "€"
-            # if data['annualRateOfGrowthTenYears'] >= 0.06:
-                # report += (data['name'] + " (" + data['tikr'] + "):\n"
-                # +"     Earnings per share have a annual rate of grouth of " + str(round(data['annualRateOfGrowth'], 4)*100) + "%, \n"
-                # +"     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
-                # +"     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
-                # +"     whe could get a annual rate of grouth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.\n"
-                # +"-----------------------------------------------------------\n")
             report += (data['name'] + " (" + data['tikr'] + "):\n"
             +"     Earnings per share have a annual rate of growth of " + str(round(data['annualRateOfGrowth'], 4)*100) + "%, \n"
             +"     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
@@ -127,26 +122,26 @@ class StockAlerter(object):
                  +"<html>\n"
                  +"      <body>\n"
                  +"         <h1 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Stock list report</h1>\n"
-                 +"         <h3 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Stock list file: " + self.fileName + "</h3>\n"
-                 +"         <h3 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Description: Estimations for the track list of companies.</h3>\n"
                  +"         <h3 style="+ '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">Date: " + now.strftime("%d/%m/%Y %H:%M:%S") + "</h3>\n")
         
         for data in result:
+            url = self.getLogoImageUrl(data['tikr'])
+            
             if data['currency'] == "USD":
                 currencySymbol = "$"
             else:
                 currencySymbol = "€"
-            # if data['annualRateOfGrowthTenYears'] >= 0.06:
-                # report += ("         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
-                # +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: green'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrowth'], 4)*100) + "%</span>, \n"
-                # +"with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
-                # +"last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
-                # +"whe  <span style='"'color: blue'"'>could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.</span></h3>\n")
-            report += ("         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
-                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: green'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrowth'], 4)*100) + "%</span>, \n"
+            if data['annualRateOfGrowthTenYears'] >= 0.06:
+                colorClass = 'color: green'
+            else:
+                colorClass = 'color: red'
+
+            report += (" <img src=" + '"' + url + '"' + ">\n"
+                +"         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
+                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: blue'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrowth'], 4)*100) + "%</span>, \n"
                 +"with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
                 +"last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
-                +"whe  <span style='"'color: blue'"'>could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.</span></h3>\n")    
+                +"whe  <span style=" + '"' + colorClass + '"' + ">could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.</span></h3>\n")    
         report += ("      </body>\n"
                 +"</html>")        
         # file = open("sample.html","w")
@@ -171,3 +166,7 @@ class StockAlerter(object):
         
     def sendAlert(self, report):
         self.sendEmail('sanchezmosquerajosemanuel@gmail.com', 'Stock list report', report)               
+
+    def getLogoImageUrl(self, tikr):
+        data = yf.Ticker(tikr)
+        return data.info['logo_url']

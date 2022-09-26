@@ -22,6 +22,7 @@ class Test(object):
         self.testGetMarketPriceTenYears()
         self.testGetAnnualRateOfGrowthTenYears()
         self.testGetStockEstimationsTenYears()
+        self.testGetLogoImageUrl()
         
     def testImportData(self):
         try:
@@ -86,4 +87,10 @@ class Test(object):
             result = stockAlerter.getStockEstimationsTenYears()
         except NameError:
             raise NameError
-        
+    
+    def testGetLogoImageUrl(self):
+        try:
+            stockAlerter = StockAlerter(self.fileName)
+            url = stockAlerter.getLogoImageUrl("BMW.DE")
+        except NameError:
+            raise NameError    
