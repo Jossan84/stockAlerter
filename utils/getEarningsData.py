@@ -19,7 +19,9 @@ member={"name": "",
         "eps": []
        }
 
-stockList = ['VEEV', 'AAPL', 'CPRT', 'IDXX']
+stockList = ['VEEV', 'AAPL', 'CPRT', 'IDXX', 'ODFL', 'SAIA', 'FOXF', 'POOL', 'LEN', 'NSSC',
+             'MTH', 'TREX', 'ORLY', 'BOOT', 'MBUU', 'CUBE', 'NVDA', 'GOOGL', 'DSGX','QLYS',
+             'LULU']
 
 members = []
 for k in range(len(stockList)):
