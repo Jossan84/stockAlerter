@@ -138,7 +138,7 @@ class StockAlerter(object):
 
             report += (" <img src=" + '"' + url + '"' + ">\n"
                 +"         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
-                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: blue'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrowth'], 4)*100) + "%</span>, \n"
+                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: blue'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrowth']*100, 2)) + "%</span>, \n"
                 +"with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
                 +"last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
                 +"whe  <span style=" + '"' + colorClass + '"' + ">could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.</span></h3>\n")    
