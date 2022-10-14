@@ -2,14 +2,17 @@
 #17/08/2022
 
 import os
+import re
 import json
 import smtplib
+import requests
 import pandas as pd
 import yfinance as yf
 import urllib.request
 from datetime import datetime
 from email.message import EmailMessage
 from email.utils import make_msgid
+from bs4 import BeautifulSoup
 
 
 class StockAlerter(object):
@@ -168,5 +171,21 @@ class StockAlerter(object):
         self.sendEmail('sanchezmosquerajosemanuel@gmail.com', 'Stock list report', report)               
 
     def getLogoImageUrl(self, tikr):
-        data = yf.Ticker(tikr)
-        return data.info['logo_url']
+        # data = yf.Ticker(tikr)
+        # return data.info['logo_url']
+        try:
+            headers = {'User-agent': 'Mozilla/5.0'}
+            url = ("https://finance.yahoo.com/quote/{}/profile?p={}".format(tikr,tikr))
+            webpage = requests.get(url, headers=headers)
+            soup = BeautifulSoup(webpage.content, 'html.parser')
+        
+            links = soup.findAll('p')
+            lines = str(links).split('\n')
+        
+            domain = re.search('href="https://(.*?)"', lines[0]).group(1)
+            imageUrl = 'https://logo.clearbit.com/%s' % domain.split('/')[0].replace('www.', '')
+        except Exception:
+            imageUrl = ''
+            pass
+        
+        return imageUrl
