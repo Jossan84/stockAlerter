@@ -129,6 +129,7 @@ class StockAlerter(object):
         
         for data in result:
             url = self.getLogoImageUrl(data['tikr'])
+            priceEarnings = self.getPriceEarnings(data['tikr'])
             
             if data['currency'] == "USD":
                 currencySymbol = "$"
@@ -143,7 +144,7 @@ class StockAlerter(object):
                 +"         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
                 +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: blue'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrowth']*100, 2)) + "%</span>, \n"
                 +"with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
-                +"last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
+                +"last ten years (PE last 12 months: "+ priceEarnings +") we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
                 +"whe  <span style=" + '"' + colorClass + '"' + ">could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.</span></h3>\n")    
         report += ("      </body>\n"
                 +"</html>")        
@@ -189,3 +190,21 @@ class StockAlerter(object):
             pass
         
         return imageUrl
+        
+    def getPriceEarnings(self, tikr):
+        try:
+            headers = {'User-agent': 'Mozilla/5.0'}
+            url = ("https://es.finance.yahoo.com/quote/" + tikr + "/key-statistics") 
+            webpage = requests.get(url, headers=headers)
+            soup = BeautifulSoup(webpage.content, 'html.parser')
+    
+            links = soup.findAll('table')
+            lines = str(links).split('\n')
+    
+            priceEarnings = re.findall(r'[\d]*[.][\d]+', lines[0])
+    
+        except Exception:
+            priceEarnings = 'N/A'
+            pass
+        
+        return priceEarnings[2] # Position 2 is PE
