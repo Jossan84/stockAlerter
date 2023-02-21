@@ -96,28 +96,6 @@ class StockAlerter(object):
                 print("     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol )
                 print("     whe could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.")
 
-    def buildReport(self):
-        result = self.getStockEstimationsTenYears()
-        now = datetime.now()
-        report = ("REPORT\n"
-                 +"Stock list file: " + self.fileName + "\n"
-                 +"Description: Estimations for the track list of companies.\n"
-                 +"Date: " + now.strftime("%d/%m/%Y %H:%M:%S")
-                 +"\n-------------------------------------------------------------------------------------------------------\n")
-        for data in result:
-            if data['currency'] == "USD":
-                currencySymbol = "$"
-            else:
-                currencySymbol = "€"
-            report += (data['name'] + " (" + data['tikr'] + "):\n"
-            +"     Earnings per share have a annual rate of growth of " + str(round(data['annualRateOfGrowth'], 4)*100) + "%, \n"
-            +"     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
-            +"     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
-            +"     whe could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.\n"
-            +"-----------------------------------------------------------\n")    
-        print(report)
-        return report
-
     def buildReportHTML(self):
         result = self.getStockEstimationsTenYears()
         now = datetime.now()
