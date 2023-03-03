@@ -13,6 +13,7 @@ from datetime import datetime
 from email.message import EmailMessage
 from email.utils import make_msgid
 from bs4 import BeautifulSoup
+from threading import Event
 
 
 class StockAlerter(object):
@@ -170,6 +171,7 @@ class StockAlerter(object):
         return imageUrl
         
     def getPriceEarnings(self, tikr):
+        Event().wait(10)
         try:
             headers = {'User-agent': 'Mozilla/5.0'}
             url = ("https://es.finance.yahoo.com/quote/" + tikr + "/key-statistics") 
@@ -180,9 +182,10 @@ class StockAlerter(object):
             lines = str(links).split('\n')
     
             priceEarnings = re.findall(r'[\d]*[.][\d]+', lines[0])
-    
         except Exception:
-            priceEarnings = 'N/A'
+            return 'N/A'
             pass
-        
-        return priceEarnings[2] # Position 2 is PE
+        if len(priceEarnings) > 3:  
+            return priceEarnings[2] # Position 2 is PE
+        else:
+            return 'N/A'
