@@ -6,12 +6,11 @@ import re
 import json
 import smtplib
 import requests
+import numpy as np
 import pandas as pd
 import yfinance as yf
-import urllib.request
 from datetime import datetime
 from email.message import EmailMessage
-from email.utils import make_msgid
 from bs4 import BeautifulSoup
 from threading import Event
 
@@ -38,17 +37,47 @@ class StockAlerter(object):
             print("EPS:", i['eps'])
             print()
 
+    def estimateCoefficients(self, x, y):
+        # Number of observations/points
+        n = np.size(x)
+
+        # Mean of x and y vector
+        m_x = np.mean(x)
+        m_y = np.mean(y)
+
+        # Calculating cross-deviation and deviation about x
+        SS_xy = np.sum(y * x) - n * m_y * m_x
+        SS_xx = np.sum(x * x) - n * m_x * m_x
+
+        # Calculating regression coefficients
+        b1 = SS_xy / SS_xx
+        b0 = m_y - b1 * m_x
+
+        return b0, b1
+
+    def getLastEarningPerShareCorrected(self, eps):
+        # Linear regression
+        x = np.array(list(range(1, len(eps) + 1)))
+        y = np.array(eps)
+        a = self.estimateCoefficients(x, y)
+
+        #  Pick last value
+        epsCorrected = a[0] + a[1] * x
+        return epsCorrected[0].item()
+
     def getLastPrice(self, tikr):
         data = yf.Ticker(tikr).history(period='1d')
         return pd.to_numeric(data['Close'], errors='coerce')[0]
 
     def getAnnualRateOfGrowth(self, eps):
         lastEarnings = eps[0]
+        # lastEarnings = self.getLastEarningPerShareCorrected(eps)
         firstEarnings = eps[10]
         return pow(lastEarnings/firstEarnings, 1.0/self.numYears)-1
 
     def getEpsValueTenYears(self, eps, annualRateOfGrowth):
         lastEarnings = eps[0]
+        # lastEarnings = self.getLastEarningPerShareCorrected(eps)
         return lastEarnings * pow(1 + annualRateOfGrowth, self.numYears)
     
     def getMarketPriceTenYears(self, epsValueTenYears, pe):
@@ -109,7 +138,7 @@ class StockAlerter(object):
         for data in result:
             url = self.getLogoImageUrl(data['tikr'])
             priceEarnings = self.getPriceEarnings(data['tikr'])
-            
+
             if data['currency'] == "USD":
                 currencySymbol = "$"
             else:
