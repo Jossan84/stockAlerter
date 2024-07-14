@@ -12,8 +12,8 @@ def main():
     rootDir = os.path.dirname(os.path.realpath(__file__)).replace('\\app','').replace('/app','')
     dataFilePath = (rootDir + "\data\stocksData.json").replace('\\', '/')
 
-    stockAlerter = StockAlerter(dataFilePath)
-    result = stockAlerter.getStockEstimationsTenYears()
+    stockAlerter = StockAlerter(dataFilePath, 10)
+    result = stockAlerter.getStockEstimations()
     report = stockAlerter.buildReportHTML()
     stockAlerter.sendAlert(report)
 

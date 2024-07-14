@@ -16,9 +16,9 @@ from threading import Event
 
 
 class StockAlerter(object):
-    def __init__(self, fileName):
+    def __init__(self, fileName, numYears):
         self.data = None
-        self.numYears = 10
+        self.numYears = numYears
         self.fileName = fileName
 
     def importData(self, fileName):
@@ -72,19 +72,19 @@ class StockAlerter(object):
     def getAnnualRateOfGrowth(self, eps):
         lastEarnings = eps[0]
         # lastEarnings = self.getLastEarningPerShareCorrected(eps)
-        firstEarnings = eps[10]
+        firstEarnings = eps[self.numYears]
         return pow(lastEarnings/firstEarnings, 1.0/self.numYears)-1
-
-    def getEpsValueTenYears(self, eps, annualRateOfGrowth):
+        
+    def getForecastedEpsValue(self, eps, annualRateOfGrowth):
         lastEarnings = eps[0]
         # lastEarnings = self.getLastEarningPerShareCorrected(eps)
         return lastEarnings * pow(1 + annualRateOfGrowth, self.numYears)
+            
+    def getForecastedMarketPrice(self, forecastedEpsValue, pe):
+        return forecastedEpsValue * pe
     
-    def getMarketPriceTenYears(self, epsValueTenYears, pe):
-        return epsValueTenYears * pe
-    
-    def getAnnualRateOfGrowthTenYears(self, marketPriceTenYears, currentPrice):
-        return pow(marketPriceTenYears/currentPrice, 1.0/self.numYears)-1
+    def getPriceAnnualRateOfGrowth(self, forecastedMarketPrice, currentPrice):
+        return pow(forecastedMarketPrice/currentPrice, 1.0/self.numYears)-1
 
     def getStocksDataMembers(self):
         self.data = self.importData(self.fileName)        
@@ -93,7 +93,7 @@ class StockAlerter(object):
     def getStocksDataMember(self, members):        
         return members[0]
         
-    def getStockEstimationsTenYears(self):
+    def getStockEstimations(self):
         data = {}
         members = self.getStocksDataMembers()
         result = [dict() for i in range(len(members))]
@@ -104,9 +104,9 @@ class StockAlerter(object):
             data['currency'] = member['currency']
             data['currentPrice'] = self.getLastPrice(data['tikr'])
             data['annualRateOfGrowth'] = self.getAnnualRateOfGrowth(member['eps'])
-            data['epsValueTenYears'] = self.getEpsValueTenYears(member['eps'], data['annualRateOfGrowth'])
-            data['marketPriceTenYears'] = self.getMarketPriceTenYears(data['epsValueTenYears'], member['minPE10Years'])
-            data['annualRateOfGrowthTenYears'] = self.getAnnualRateOfGrowthTenYears(data['marketPriceTenYears'], data['currentPrice'])
+            data['forecastedEpsValue'] = self.getForecastedEpsValue(member['eps'], data['annualRateOfGrowth'])
+            data['forecastedMarketPrice'] = self.getForecastedMarketPrice(data['forecastedEpsValue'], member['minPE10Years'])
+            data['annualRateOfGrowth'] = self.getPriceAnnualRateOfGrowth(data['forecastedMarketPrice'], data['currentPrice'])
 
             result[count] = data.copy()
             count = count + 1
@@ -122,12 +122,12 @@ class StockAlerter(object):
                 print("-----------------------------------------------------------")
                 print(data['name'] + " (" + data['tikr'] + "):")
                 print("     Earnings per share have a annual rate of growth of " + str(round(data['annualRateOfGrowth'], 4)*100) + "%, ")
-                print("     with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of ")
-                print("     last ten years we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol )
-                print("     whe could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.")
+                print("     with this rate the earnings per share for ten years from now will be " + str(round(data['forecastedEpsValue'], 2)) + currencySymbol + ". Multiplying this for the min PE of ")
+                print("     last ten years we get a market price of " + str(round(data['forecastedMarketPrice'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol )
+                print("     whe could get a annual rate of growth of " + str(round(data['annualRateOfGrowth']*100, 2)) + "%.")
 
     def buildReportHTML(self):
-        result = self.getStockEstimationsTenYears()
+        result = self.getStockEstimations()
         now = datetime.now()
         report = ("<!DOCTYPE html>\n"
                  +"<html>\n"
@@ -143,17 +143,17 @@ class StockAlerter(object):
                 currencySymbol = "$"
             else:
                 currencySymbol = "€"
-            if data['annualRateOfGrowthTenYears'] >= 0.06:
+            if data['annualRateOfGrowth'] >= 0.06:
                 colorClass = 'color: green'
             else:
                 colorClass = 'color: red'
 
             report += (" <img src=" + '"' + url + '"' + ">\n"
                 +"         <h2 style=" + '"' + "color:SlateGray; font-family:Courier New, monospace;" '"' + ">" + data['name'] + " (" + data['tikr'] + ")" + "</h2>\n"
-                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">Earnings per share have a <span style='"'color: blue'"'>annual rate of growth (eps) of " + str(round(data['annualRateOfGrowth']*100, 2)) + "%</span>, \n"
-                +"with this rate the earnings per share for ten years from now will be " + str(round(data['epsValueTenYears'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
-                +"last ten years (PE last 12 months: "+ priceEarnings +") we get a market price of " + str(round(data['marketPriceTenYears'], 2)) + currencySymbol + " per share to ten years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
-                +"whe  <span style=" + '"' + colorClass + '"' + ">could get a annual rate of growth of " + str(round(data['annualRateOfGrowthTenYears']*100, 2)) + "%.</span></h3>\n")    
+                +"         <h3 style="+ '"' + "font-family:Courier New, monospace;" '"' + ">EPS have a <span style='"'color: blue'"'>annual rate of growth of " + str(round(data['annualRateOfGrowth']*100, 2)) + "%</span>, \n"
+                +"with this rate the EPS in " + str(round(self.numYears)) + " years will be " + str(round(data['forecastedEpsValue'], 2)) + currencySymbol + ". Multiplying this for the min PE of \n"
+                +"last ten years (PE last 12 months: "+ priceEarnings +") we get a market price of " + str(round(data['forecastedMarketPrice'], 2)) + currencySymbol + " per share in " + str(round(self.numYears)) + " years. If the current price is " + str(round(data['currentPrice'], 2)) + currencySymbol + "\n"
+                +"whe  <span style=" + '"' + colorClass + '"' + ">could get a annual rate of growth of " + str(round(data['annualRateOfGrowth']*100, 2)) + "%.</span></h3>\n")    
         report += ("      </body>\n"
                 +"</html>")        
         # file = open("sample.html","w")
@@ -190,9 +190,11 @@ class StockAlerter(object):
         
             links = soup.findAll('p')
             lines = str(links).split('\n')
-        
+            
             domain = re.search('href="https://(.*?)"', lines[0]).group(1)
-            imageUrl = 'https://logo.clearbit.com/%s' % domain.split('/')[0].replace('www.', '')
+            # imageUrl = 'https://logo.clearbit.com/%s' % domain.split('/')[0].replace('www.', '')
+            imageUrl = 'https://img.logo.dev/%s?token=pk_YDn-R_qZQSOjDbsmH1zeXw' % domain.split('/')[0].replace('www.', '')
+            
         except Exception:
             imageUrl = ''
             pass
